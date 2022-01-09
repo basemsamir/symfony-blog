@@ -35,24 +35,24 @@ class Article
     private $image_path;
 
     /**
-     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="articles")
-     */
-    private $category_id;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="article_id")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article_id", orphanRemoval=true)
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
     public function __construct()
     {
-        $this->category_id = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,36 +96,6 @@ class Article
         return $this;
     }
 
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategoryId(): Collection
-    {
-        return $this->category_id;
-    }
-
-    public function addCategoryId(Category $categoryId): self
-    {
-        if (!$this->category_id->contains($categoryId)) {
-            $this->category_id[] = $categoryId;
-            $categoryId->setArticles($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategoryId(Category $categoryId): self
-    {
-        if ($this->category_id->removeElement($categoryId)) {
-            // set the owning side to null (unless already changed)
-            if ($categoryId->getArticles() === $this) {
-                $categoryId->setArticles(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCreated(): ?\DateTimeInterface
     {
         return $this->created;
@@ -138,15 +108,47 @@ class Article
         return $this;
     }
 
-    public function getComments(): ?Comment
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function setComments(?Comment $comments): self
+    public function addComment(Comment $comment): self
     {
-        $this->comments = $comments;
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setArticle($this);
+        }
 
         return $this;
     }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getArticleId() === $this) {
+                $comment->setArticleId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
 }
