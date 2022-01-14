@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\User;
 use App\Repository\CategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,9 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
+
+        $users = $this->doctrine->getRepository(User::class)->findAll();
+        dd($users);
         $categories = $this->doctrine->getRepository(Category::class)->findAll();
         $articles = $this->doctrine->getRepository(Article::class)->findAll();
 
