@@ -97,9 +97,9 @@
                                 <div class="thumb">
                                     <img class="img-fluid" src="img/{{ article.getImagePath()}}" alt="">
                                     <ul class="thumb-info">
-                                        <li><a href="#"><i class="ti-user"></i>Admin</a></li>
+                                        <li><a href="#"><i class="ti-user"></i>{{ article.getUser().getUsername()  }}</a></li>
                                         <li><a href="#"><i class="ti-notepad"></i>{{ article.created|date }}</a></li>
-                                        <li><a href="#"><i class="ti-themify-favicon"></i>Comments</a></li>
+                                        <li><a href="#"><i class="ti-themify-favicon"></i>{{ article.getComments()|length }} {{ article.getComments()|length == 1?'Comment':'Comments' }}</a></li>
                                     </ul>
                                 </div>
                                 <div class="details mt-20">
@@ -154,13 +154,13 @@
 
 
                             <div class="single-sidebar-widget post-category-widget">
-                                <h4 class="single-sidebar-widget__title">Catgory</h4>
+                                <h4 class="single-sidebar-widget__title">Category</h4>
                                 <ul class="cat-list mt-20">
                                     {% for category in categories %}
                                     <li>
                                         <a href="#" class="d-flex justify-content-between">
                                             <p>{{ category.name }}</p>
-                                            <p>(03)</p>
+                                            <p>{{ category.getArticles().count() }}</p>
                                         </a>
                                     </li>
                                     {% endfor %}

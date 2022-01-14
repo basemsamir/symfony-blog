@@ -26,9 +26,6 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
-
-        $users = $this->doctrine->getRepository(User::class)->findAll();
-        dd($users);
         $categories = $this->doctrine->getRepository(Category::class)->findAll();
         $articles = $this->doctrine->getRepository(Article::class)->findAll();
 
