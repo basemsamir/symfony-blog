@@ -26,4 +26,9 @@ class ArticleService extends AbstractService
         $page->setMaxPerPage($articles_per_page);
         return $page->setCurrentPage($page_number);
     }
+
+    public function getLatestArticles($number_of_articles)
+    {
+        return $this->article_repo->findOrderedNumberOfArticles($number_of_articles, 'DESC');
+    }
 }

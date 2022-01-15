@@ -31,10 +31,12 @@ class HomeController extends AbstractController
     {
         $categories = $this->category_service->getAllCategories();
         $articles = $this->article_service->getArticlesPerPage($page, 3);
+        $latest_articles = $this->article_service->getLatestArticles(6);
 
         return $this->render('home/index.html.twig', [
-            'categories' => $categories,
-            'articles'   => $articles
+            'categories'        => $categories,
+            'articles'          => $articles,
+            'latest_articles'   => $latest_articles,
         ]);
     }
 }

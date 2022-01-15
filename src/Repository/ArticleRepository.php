@@ -5,10 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,12 +15,9 @@ use Pagerfanta\Pagerfanta;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    private $entity_manager;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Article::class);
-        $this->entity_manager = $this->getEntityManager();
     }
 
     public function getArticlesPerPageQuery(): QueryBuilder
@@ -36,15 +30,14 @@ class ArticleRepository extends ServiceEntityRepository
 
     }
 
-    /*
-    public function findOneBySomeField($value): ?Article
+    public function findOrderedNumberOfArticles($limit = '3', $order_by = 'ASC')
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
+            ->join('a.category', 'c')
+            ->setMaxResults($limit)
+            ->orderBy('a.created',$order_by)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
 }
