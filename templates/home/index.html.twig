@@ -30,7 +30,7 @@
                             <div class="blog__slide__content">
                                 <a class="blog__slide__label" href="#">{{ latest_article.category.name }}</a>
                                 <h3><a href="#">{{ latest_article.title }}</a></h3>
-                                <p>2 days ago</p>
+                                <p>{{ latest_article.created|duration }}</p>
                             </div>
                         </div>
                     {% endfor %}
