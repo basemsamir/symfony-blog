@@ -15,4 +15,12 @@ abstract class AbstractService
     {
         $this->doctrine = $doctrine;
     }
+
+    /**
+     * @return ManagerRegistry
+     */
+    public function getDoctrine(): ManagerRegistry
+    {
+        return $this->doctrine;
+    }
 }

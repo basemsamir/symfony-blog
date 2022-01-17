@@ -68,7 +68,6 @@
                             <div class="col-lg-12">
                                 <nav class="blog-pagination justify-content-center d-flex">
                                     {{ pagerfanta(articles) }}
-
                                 </nav>
                             </div>
                         </div>
@@ -94,7 +93,7 @@
                                 <ul class="cat-list mt-20">
                                     {% for category in categories %}
                                     <li>
-                                        <a href="#" class="d-flex justify-content-between">
+                                        <a href="{{ path('category_articles',{id: category.id}) }}" class="d-flex justify-content-between">
                                             <p>{{ category.name }}</p>
                                             <p>{{ category.getArticles().count() }}</p>
                                         </a>

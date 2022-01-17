@@ -21,7 +21,7 @@ class ArticleService extends AbstractService
 
     public function getArticlesPerPage($page_number, $articles_per_page): Pagerfanta
     {
-        $article_query = $this->article_repo->getArticlesPerPageQuery($page_number-1);
+        $article_query = $this->article_repo->getArticlesPerPageQuery();
         $page = new Pagerfanta(new QueryAdapter($article_query));
         $page->setMaxPerPage($articles_per_page);
         return $page->setCurrentPage($page_number);

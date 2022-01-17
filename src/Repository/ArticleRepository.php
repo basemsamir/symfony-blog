@@ -30,6 +30,19 @@ class ArticleRepository extends ServiceEntityRepository
 
     }
 
+    public function getCategoryArticlesPerPageQuery($category_id): QueryBuilder
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.created', 'DESC')
+            ->join('a.comments','c')
+            ->join('a.user','u')
+            ->where('a.category = :id')
+            ->setParameter('id',$category_id)
+            ->addSelect('a','c','u');
+
+    }
+
+
     public function findOrderedNumberOfArticles($limit = '3', $order_by = 'ASC')
     {
         return $this->createQueryBuilder('a')

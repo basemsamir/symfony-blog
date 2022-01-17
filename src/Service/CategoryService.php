@@ -24,4 +24,14 @@ class CategoryService extends AbstractService
     {
         return $this->category_repo->findAll();
     }
+
+    public function getCategoryArticlesPerPage($category_id, $page_number, $articles_per_page): Pagerfanta
+    {
+        $article_query = $this->getDoctrine()
+                              ->getRepository(Article::class)
+                              ->getCategoryArticlesPerPageQuery($category_id);
+        $page = new Pagerfanta(new QueryAdapter($article_query));
+        $page->setMaxPerPage($articles_per_page);
+        return $page->setCurrentPage($page_number);
+    }
 }
