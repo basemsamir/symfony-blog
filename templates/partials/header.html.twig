@@ -15,7 +15,7 @@
                     <ul class="nav navbar-nav menu_nav justify-content-center">
 
                         <li class="nav-item {{ app.request.requesturi == path('posts')?'active':'' }}"><a class="nav-link" href="{{ url('posts') }}">Home</a></li>
-                        {% for menu_category in menu_categories.getAllCategories() %}
+                        {% for menu_category in global_categories.getAllCategories() %}
                             <li class="nav-item {{ app.request.requesturi == path('category_articles',{'id':menu_category.id})?'active':'' }}"><a class="nav-link" href="{{ url('category_articles',{'id':menu_category.id}) }}">{{ menu_category.name }}</a></li>
                         {% endfor %}
                         <li class="nav-item submenu dropdown">
