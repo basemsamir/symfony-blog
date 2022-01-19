@@ -23,6 +23,8 @@ class ArticleController extends AbstractController
      */
     public function index(Article $article): Response
     {
+        $this->article_service->increaseViews($article);
+
         $pre_next_articles = $this->article_service->getPreviousNextArticles($article);
         return $this->render('article/index.html.twig', compact('article','pre_next_articles'));
     }

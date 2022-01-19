@@ -66,6 +66,11 @@ class Article
      */
     private $tags;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $views;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -215,6 +220,18 @@ class Article
         if ($this->tags->removeElement($tag)) {
             $tag->removeArticle($this);
         }
+
+        return $this;
+    }
+
+    public function getViews(): ?int
+    {
+        return $this->views ?? 0;
+    }
+
+    public function setViews(?int $views): self
+    {
+        $this->views = $views;
 
         return $this;
     }

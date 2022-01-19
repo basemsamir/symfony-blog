@@ -29,7 +29,7 @@ class ArticleService extends AbstractService
 
     public function getLatestArticles($number_of_articles)
     {
-        return $this->article_repo->findOrderedNumberOfArticles($number_of_articles, 'DESC');
+        return $this->article_repo->getOrderedNumberOfArticles($number_of_articles, 'DESC');
     }
 
     public function getPreviousNextArticles(Article $current_article)
@@ -37,4 +37,13 @@ class ArticleService extends AbstractService
         return $this->article_repo->getPrevNextArticle($current_article->getId());
     }
 
+    public function increaseViews(Article $article)
+    {
+        $this->article_repo->increaseViews($article);
+    }
+
+    public function getPopularArticles($number_of_articles)
+    {
+        return $this->article_repo->getMostViewedArticles($number_of_articles);
+    }
 }

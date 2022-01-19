@@ -2,6 +2,7 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         global_categories: '@App\Service\CategoryService'
+        global_articles:   '@App\Service\ArticleService'
 
 when@test:
     twig:

@@ -20,6 +20,17 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    /**
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function increaseViews(Article $article)
+    {
+        $article->setViews($article->getViews()+1);
+        $this->getEntityManager()->persist($article);
+        $this->getEntityManager()->flush();
+    }
+
     public function getArticlesPerPageQuery(): QueryBuilder
     {
        return $this->createQueryBuilder('a')
@@ -42,8 +53,7 @@ class ArticleRepository extends ServiceEntityRepository
 
     }
 
-
-    public function findOrderedNumberOfArticles($limit = '3', $order_by = 'ASC')
+    public function getOrderedNumberOfArticles($limit = '3', $order_by = 'ASC')
     {
         return $this->createQueryBuilder('a')
             ->join('a.category', 'c')
@@ -52,6 +62,16 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function getMostViewedArticles($limit = '3')
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.views is not null')
+            ->setMaxResults($limit)
+            ->orderBy('a.views','DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function getPrevNextArticle(int $current_article_id): array
