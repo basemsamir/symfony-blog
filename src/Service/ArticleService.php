@@ -31,4 +31,10 @@ class ArticleService extends AbstractService
     {
         return $this->article_repo->findOrderedNumberOfArticles($number_of_articles, 'DESC');
     }
+
+    public function getPreviousNextArticles(Article $current_article)
+    {
+        return $this->article_repo->getPrevNextArticle($current_article->getId());
+    }
+
 }

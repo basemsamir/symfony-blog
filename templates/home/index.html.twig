@@ -28,7 +28,7 @@
                                 <img class="card-img rounded-0" src="{{ asset('img/'~latest_article.getImagePath()) }}" alt="">
                             </div>
                             <div class="blog__slide__content">
-                                <a class="blog__slide__label" href="#">{{ latest_article.category.name }}</a>
+                                <a class="blog__slide__label" href="{{ url('category_articles',{'id':latest_article.category.id}) }}">{{ latest_article.category.name }}</a>
                                 <h3><a href="{{ url('article',{'id':latest_article.id}) }}">{{ latest_article.title }}</a></h3>
                                 <p>{{ latest_article.created|duration }}</p>
                             </div>
@@ -65,7 +65,7 @@
                                         {% endfor %}
                                     </p>
                                     <p>{{ article.content }}</p>
-                                    <a class="button" href="#">Read More <i class="ti-arrow-right"></i></a>
+                                    <a class="button" href="{{ url('article',{id: article.id}) }}">Read More <i class="ti-arrow-right"></i></a>
                                 </div>
                             </div>
                         {% endfor %}

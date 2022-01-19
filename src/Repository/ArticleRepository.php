@@ -53,4 +53,24 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function getPrevNextArticle(int $current_article_id): array
+    {
+        $previous_article =  $this->createQueryBuilder('a')
+                                    ->select('a.id','a.title','a.image_path')
+                                    ->where('a.id < :current_id')
+                                    ->setParameter('current_id', $current_article_id)
+                                    ->setMaxResults(1)
+                                    ->getQuery()
+                                    ->getResult();
+
+        $next_article =  $this->createQueryBuilder('a')
+                              ->select('a.id','a.title','a.image_path')
+                              ->where('a.id > :current_id')
+                              ->setParameter('current_id', $current_article_id)
+                              ->setMaxResults(1)
+                              ->getQuery()
+                              ->getResult();
+        return [reset($previous_article), reset($next_article)];
+    }
 }
