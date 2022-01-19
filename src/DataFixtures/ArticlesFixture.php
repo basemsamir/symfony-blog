@@ -5,8 +5,10 @@ namespace App\DataFixtures;
 use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\Comment;
+use App\Entity\Tag;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Carbon\Carbon;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -32,11 +34,16 @@ class ArticlesFixture extends Fixture
             ->setEmail('asd2@asd.com')
             ->setRoles(['author']);
         $manager->persist($this->user);
-        $manager->flush();
 
-        $this->persist_articles_for_category($manager, 'Sports');
-        $this->persist_articles_for_category($manager, 'Fashion');
-        $this->persist_articles_for_category($manager, 'News');
+        $tags = $this->saveTags($manager, ['football','news']);
+        $this->persist_articles_for_category($manager, 'Sports', $tags);
+
+        $tags = $this->saveTags($manager, ['fashion','travel','life style']);
+        $this->persist_articles_for_category($manager, 'Fashion', $tags);
+
+        $tags = $this->saveTags($manager, ['war','ill','covid']);
+        $this->persist_articles_for_category($manager, 'News', $tags);
+
         $manager->flush();
     }
 
@@ -44,8 +51,12 @@ class ArticlesFixture extends Fixture
      * Store some fake data into articles
      * @param ObjectManager $manager
      * @param string $category_name
+     * @param array $tags
      */
-    private function persist_articles_for_category(ObjectManager $manager, string $category_name)
+    private function persist_articles_for_category(
+        ObjectManager $manager,
+        string $category_name,
+        array $tags)
     {
         $faker = Factory::create();
 
@@ -53,6 +64,8 @@ class ArticlesFixture extends Fixture
         $category->setName($category_name);
         $category->setActive(1);
         $manager->persist($category);
+
+        $commentator = $this->doctrine->getRepository(User::class)->find('11');
 
         for($i=0; $i < 10; $i++) {
             $article = new Article();
@@ -62,13 +75,33 @@ class ArticlesFixture extends Fixture
             $article->setImagePath('blog/blog1.png');
             $article->setCategory($category);
             $article->setUser($this->user);
+            $article->setLikes($faker->randomNumber(2));
+
+            foreach ($tags as $tag){
+                $article->addTag($tag);
+            }
 
             $comment = new Comment();
             $comment->setContent($faker->paragraphs(3,true));
+            $comment->setCreated(Carbon::now());
+            $comment->setUser($commentator);
             $manager->persist($comment);
             $article->addComment($comment);
 
             $manager->persist($article);
         }
+    }
+
+    public function saveTags(ObjectManager $manager, array $tags): array
+    {
+        $saved_tags = [];
+        for ($j=0; $j<count($tags); $j++){
+            $tag = new Tag();
+            $tag->setTitle($tags[$j]);
+            $tag->setCreated(Carbon::now());
+            $manager->persist($tag);
+            $saved_tags[] = $tag;
+        }
+        return $saved_tags;
     }
 }
