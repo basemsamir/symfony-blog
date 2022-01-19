@@ -29,7 +29,7 @@
                             </div>
                             <div class="blog__slide__content">
                                 <a class="blog__slide__label" href="#">{{ latest_article.category.name }}</a>
-                                <h3><a href="#">{{ latest_article.title }}</a></h3>
+                                <h3><a href="{{ url('article',{'id':latest_article.id}) }}">{{ latest_article.title }}</a></h3>
                                 <p>{{ latest_article.created|duration }}</p>
                             </div>
                         </div>
@@ -58,7 +58,12 @@
                                     <a href="{{ url('article',{'id':article.id}) }}">
                                         <h3>{{ article.title }}</h3>
                                     </a>
-                                    <p class="tag-list-inline">Tag: <a href="#">travel</a>, <a href="#">life style</a>, <a href="#">technology</a>, <a href="#">fashion</a></p>
+                                    <p class="tag-list-inline">
+                                        Tag:
+                                        {% for tag in article.tags %}
+                                            <a href="#">{{ tag.title }}</a>
+                                        {% endfor %}
+                                    </p>
                                     <p>{{ article.content }}</p>
                                     <a class="button" href="#">Read More <i class="ti-arrow-right"></i></a>
                                 </div>
