@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sensive Blog | Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap.min.css') }}">
+
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Sensive Blog</h2>
+            {% if error %}
+                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+            <form action="{{ path('login') }}" method="post">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" id="password" name="_password"/>
+                    <input type="hidden" name="_target_path" value="/admin"/>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                </div>
+                <button type="submit" class="btn btn-default">Login</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

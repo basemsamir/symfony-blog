@@ -24,9 +24,25 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            # to specify logout route.
+            logout:
+                # logout route name
+                path: logout
+                # which route will be redirected.
+                target: login
 
+            # to enable login throttling max attempts 3 per min.
+            login_throttling:
+                max_attempts: 3
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
+            form_login:
+                # to enable authentication
+                login_path: login
+                check_path: login
+                # to enable csrf in login form
+                enable_csrf: true
+
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
