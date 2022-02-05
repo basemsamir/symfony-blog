@@ -41,7 +41,7 @@
                                         <h3>{{ article.title }}</h3>
                                     </a>
                                     <p>{{ article.content }}</p>
-                                    <a class="button" href="#">Read More <i class="ti-arrow-right"></i></a>
+                                    <a class="button" href="{{ url('article',{'id':article.id}) }}">Read More <i class="ti-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>

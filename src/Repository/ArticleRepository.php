@@ -35,7 +35,7 @@ class ArticleRepository extends ServiceEntityRepository
     {
        return $this->createQueryBuilder('a')
                    ->orderBy('a.created', 'DESC')
-                   ->join('a.comments','c')
+                   ->leftJoin('a.comments','c')
                    ->join('a.user','u')
                    ->addSelect('a','c','u');
 
@@ -45,7 +45,7 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->orderBy('a.created', 'DESC')
-            ->join('a.comments','c')
+            ->leftJoin('a.comments','c')
             ->join('a.user','u')
             ->where('a.category = :id')
             ->setParameter('id',$category_id)
