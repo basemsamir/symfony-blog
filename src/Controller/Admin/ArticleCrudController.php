@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints\Choice;
 
 class ArticleCrudController extends AbstractCrudController
 {
+
     public static function getEntityFqcn(): string
     {
         return Article::class;
