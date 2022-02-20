@@ -42,7 +42,7 @@ security:
                 check_path: login
                 # to enable csrf in login form
                 enable_csrf: true
-
+            user_checker: App\Security\UserChecker
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true

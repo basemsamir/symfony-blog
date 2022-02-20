@@ -41,10 +41,12 @@ class ArticleCrudController extends AbstractCrudController
             IdField::new('id')->hideOnIndex()->hideOnForm(),
             TextField::new('title')->setSortable(false),
             TextareaField::new('content')->hideOnIndex(),
-            AssociationField::new('category')->setSortable(false),
+            AssociationField::new('category')->setSortable(false)
+            ->setPermission('ROLE_ADMIN'),
             AssociationField::new('user','Author')
                 ->setSortable(false)
-                ->hideOnForm(),
+                ->hideOnForm()
+                ->setPermission('ROLE_ADMIN'),
             AssociationField::new('tags')->hideOnIndex()
             ->setFormTypeOptionIfNotSet('by_reference', false),
             ImageField::new('image_path')->setUploadDir('public/img')->hideOnIndex(),
