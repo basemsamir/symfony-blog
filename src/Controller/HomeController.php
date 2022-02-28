@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Form\ContactUsFormType;
+use App\Form\NewletterSubscribtionFormType;
 use App\Service\ArticleService;
 use App\Service\CategoryService;
+use App\Service\HomeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,11 +19,15 @@ class HomeController extends AbstractController
 
     private $article_service;
     private $category_service;
+    private $home_service;
 
-    public function __construct(ArticleService $article_service, CategoryService $category_service)
+    public function __construct(ArticleService $article_service,
+                                CategoryService $category_service,
+                                HomeService $home_service)
     {
         $this->article_service = $article_service;
         $this->category_service = $category_service;
+        $this->home_service     = $home_service;
     }
 
     /**
@@ -75,5 +81,30 @@ class HomeController extends AbstractController
         [
             'contact_us' => $contact_us_form->createView()
         ]);
+    }
+
+    /**
+     * @Route(
+     *     "/subscribe",
+     *     name="store_subscription",
+     *     methods = "post"
+     * )
+     */
+    public function storeSubscription(Request $request)
+    {
+        $newsletter_form = $this->home_service->getNewsletterForm();
+        $newsletter_form->handleRequest($request);
+        if($newsletter_form->isSubmitted() && $newsletter_form->isValid()){
+            $newsletter_data = $newsletter_form->getData();
+            $this->home_service->storeNewsletterSubscription($newsletter_data);
+
+            $this->addFlash(
+                'success',
+                'You subscribed to us!'
+            );
+            return $this->redirect($request->headers->get('referer'));
+
+        }
+        dd($request->request->all());
     }
 }

@@ -6,20 +6,24 @@ namespace App\Service;
 
 use App\Entity\Article;
 use App\Entity\Comment;
+use App\Form\NewletterSubscribtionFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use Psr\Container\ContainerInterface;
 
 class ArticleService extends AbstractService
 {
     private $article_repo;
     private $comment_repo;
+    private $container;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, ContainerInterface $container)
     {
         parent::__construct($doctrine);
         $this->article_repo = $this->doctrine->getRepository(Article::class);
         $this->comment_repo = $this->doctrine->getRepository(Comment::class);
+        $this->container    = $container;
     }
 
     public function getArticlesPerPage($page_number, $articles_per_page): Pagerfanta
@@ -56,4 +60,5 @@ class ArticleService extends AbstractService
         unset($comment_data['article_id']);
         $this->comment_repo->insertComment($comment_data);
     }
+
 }

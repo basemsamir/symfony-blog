@@ -3,6 +3,7 @@ twig:
     globals:
         global_categories: '@App\Service\CategoryService'
         global_articles:   '@App\Service\ArticleService'
+        home_service:       '@App\Service\HomeService'
 
 when@test:
     twig:

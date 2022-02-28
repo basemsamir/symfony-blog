@@ -1,15 +1,22 @@
 <!-- Start Blog Post Siddebar -->
 <div class="col-lg-4 sidebar-widgets">
     <div class="widget-wrap">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-info">
+                {{ message }}
+            </div>
+        {% endfor %}
         <div class="single-sidebar-widget newsletter-widget">
             <h4 class="single-sidebar-widget__title">Newsletter</h4>
+            {% set newsletterForm = home_service.getNewsletterFormView %}
+            {{ form_start(newsletterForm) }}
             <div class="form-group mt-30">
                 <div class="col-autos">
-                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Enter email" onfocus="this.placeholder = ''"
-                           onblur="this.placeholder = 'Enter email'">
+                    {{ form_widget(newsletterForm.email) }}
                 </div>
             </div>
-            <button class="bbtns d-block mt-20 w-100">Subcribe</button>
+                {{ form_widget(newsletterForm.submit) }}
+            {{ form_end(newsletterForm) }}
         </div>
 
 
