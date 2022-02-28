@@ -31,14 +31,19 @@ class Comment
     private $article;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
-     */
-    private $user;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $created;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $name;
 
     public function getId(): ?int
     {
@@ -69,18 +74,6 @@ class Comment
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getCreated(): ?\DateTimeInterface
     {
         return $this->created;
@@ -89,6 +82,42 @@ class Comment
     public function setCreated(\DateTimeInterface $created): self
     {
         $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

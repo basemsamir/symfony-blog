@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,23 @@ class CommentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Comment::class);
+    }
+
+    /**
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function insertComment($comment_data): void
+    {
+        $comment = new Comment();
+        $comment->setEmail($comment_data['email'])
+                ->setContent($comment_data['content'])
+                ->setName($comment_data['name'])
+                ->setArticle($comment_data['article'])
+                ->setCreated(Carbon::now());
+
+        $this->getEntityManager()->persist($comment);
+        $this->getEntityManager()->flush();
     }
 
     // /**

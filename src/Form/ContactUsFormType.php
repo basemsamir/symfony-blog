@@ -44,8 +44,8 @@ class ContactUsFormType extends AbstractType
             ->add('submit', SubmitType::class,[
                 'attr' => [
                     'class' => 'button button--active button-contactForm',
-                    'value' => 'Send Message'
-                ]
+                ],
+                'label' => 'Send Message'
             ])
         ;
     }

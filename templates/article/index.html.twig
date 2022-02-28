@@ -104,11 +104,8 @@
                             {% for comment in article.comments %}
                             <div class="single-comment justify-content-between d-flex">
                                 <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                        <img src="{{ asset('img/user/'~comment.user.getProfilePicture()) }}" width="50" alt="">
-                                    </div>
                                     <div class="desc">
-                                        <h5><a href="#">{{ comment.user.username }}</a></h5>
+                                        <h5>{{ comment.name }}</h5>
                                         <p class="date">{{ comment.created|date }}</p>
                                         <p class="comment">
                                            {{ comment.content }}
@@ -121,23 +118,21 @@
                     </div>
                     <div class="comment-form">
                         <h4>Leave a Reply</h4>
-                        <form>
+                        {{ form_start(comment_form) }}
                             <div class="form-group form-inline">
                                 <div class="form-group col-lg-6 col-md-6 name">
-                                    <input type="text" class="form-control" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'">
+                                    {{ form_widget(comment_form.name) }}
                                 </div>
                                 <div class="form-group col-lg-6 col-md-6 email">
-                                    <input type="email" class="form-control" id="email" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'">
+                                    {{ form_widget(comment_form.email) }}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="subject" placeholder="Subject" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Subject'">
+                                {{ form_widget(comment_form.content) }}
                             </div>
-                            <div class="form-group">
-                                <textarea class="form-control mb-10" rows="5" name="message" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
-                            </div>
-                            <a href="#" class="button submit_btn">Post Comment</a>
-                        </form>
+                            {{ form_widget(comment_form.submit) }}
+                            {{ form_widget(comment_form.article_id, {'value': article.id}) }}
+                        {{ form_end(comment_form) }}
                     </div>
                 </div>
 
