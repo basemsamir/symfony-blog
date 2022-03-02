@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\Setting;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -58,5 +59,7 @@ class DashboardController extends AbstractDashboardController
         ->setPermission('ROLE_USER');
         yield MenuItem::linkToCrud('User', 'fas fa-user', User::class)
         ->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Settings', 'fa fa-gear', Setting::class)
+            ->setPermission('ROLE_ADMIN');
     }
 }
