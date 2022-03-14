@@ -20,11 +20,10 @@
                         {% endfor %}
                         <li class="nav-item"><a class="nav-link" href="{{ path('contact-us') }}">Contact</a></li>
                     </ul>
+                    {% set settings = home_service.getSettings() %}
                     <ul class="nav navbar-nav navbar-right navbar-social">
-                        <li><a href="#"><i class="ti-facebook"></i></a></li>
-                        <li><a href="#"><i class="ti-twitter-alt"></i></a></li>
-                        <li><a href="#"><i class="ti-instagram"></i></a></li>
-                        <li><a href="#"><i class="ti-skype"></i></a></li>
+                        <li><a target="_blank" href="{{ settings['facebook_url'] }}"><i class="ti-facebook"></i></a></li>
+                        <li><a target="_blank" href="{{ settings['twitter_url'] }}"><i class="ti-twitter-alt"></i></a></li>
                     </ul>
                 </div>
             </div>

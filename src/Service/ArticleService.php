@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\NewletterSubscribtionFormType;
+use Carbon\Carbon;
 use Doctrine\Persistence\ManagerRegistry;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -61,4 +62,20 @@ class ArticleService extends AbstractService
         $this->comment_repo->insertComment($comment_data);
     }
 
+    public function getArticlesChart(): array
+    {
+        $current_month_label    = Carbon::now()->format('F');
+        $last_month_label       = Carbon::now()->subMonth()->format('F');
+        $last_two_month_label   = Carbon::now()->subMonth()->subMonth()->format('F');
+
+        $months_range[]         = Carbon::now()->subMonth()->subMonth()->format('m');
+        $months_range[]         = Carbon::now()->subMonth()->format('m');
+        $months_range[]         = Carbon::now()->format('m');
+        $result                 = $this->article_repo->getArticlesCountLastMonths($months_range);
+
+        return [
+            'monthsLabel'  => [$last_two_month_label, $last_month_label, $current_month_label],
+            'monthsCount'  => array_column($result,"number_of_articles")
+        ];
+    }
 }

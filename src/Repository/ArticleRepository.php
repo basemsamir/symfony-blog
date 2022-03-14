@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -76,7 +77,7 @@ class ArticleRepository extends ServiceEntityRepository
 
     public function getPrevNextArticle(int $current_article_id): array
     {
-        $previous_article =  $this->createQueryBuilder('a')
+        $previous_article = $this->createQueryBuilder('a')
                                     ->select('a.id','a.title','a.image_path')
                                     ->where('a.id < :current_id')
                                     ->setParameter('current_id', $current_article_id)
@@ -84,7 +85,7 @@ class ArticleRepository extends ServiceEntityRepository
                                     ->getQuery()
                                     ->getResult();
 
-        $next_article =  $this->createQueryBuilder('a')
+        $next_article    = $this->createQueryBuilder('a')
                               ->select('a.id','a.title','a.image_path')
                               ->where('a.id > :current_id')
                               ->setParameter('current_id', $current_article_id)
@@ -92,5 +93,24 @@ class ArticleRepository extends ServiceEntityRepository
                               ->getQuery()
                               ->getResult();
         return [reset($previous_article), reset($next_article)];
+    }
+
+    public function getArticlesCountLastMonths(array $months_range)
+    {
+        array_walk($months_range, function (&$item){
+            $item = sprintf("select %s month",$item);
+        });
+        $months_temp_table_sql = implode(" union all ", $months_range);
+
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select count(a.id) as number_of_articles
+                            from ($months_temp_table_sql) as t
+                            left join article as a on MONTH(a.created) = t.month
+                            group by t.month 
+                            ";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
+
+        return $result->fetchAllAssociative();
     }
 }
