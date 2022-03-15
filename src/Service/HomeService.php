@@ -9,6 +9,7 @@ use App\Entity\Setting;
 use App\Form\NewletterSubscribtionFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 
 class HomeService extends AbstractService
@@ -47,14 +48,18 @@ class HomeService extends AbstractService
 
     public function getSettings(): array
     {
-        $settings = [];
-
-        $entities = $this->setting_repo->findAll();
-        foreach ($entities as $entity){
-            $settings[$entity->getConfigKey()] = $entity->getConfigValue();
+        $cached_settings = $this->cache->getItem('settings.all');
+        if(!$cached_settings->isHit()){
+            $settings = [];
+            $entities = $this->setting_repo->findAll();
+            foreach ($entities as $entity){
+                $settings[$entity->getConfigKey()] = $entity->getConfigValue();
+            }
+            $cached_settings->set($settings);
+            $this->cache->save($cached_settings);
         }
 
-        return $settings;
+        return $cached_settings->get();
     }
 
 }

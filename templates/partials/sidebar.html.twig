@@ -23,7 +23,7 @@
         <div class="single-sidebar-widget post-category-widget">
             <h4 class="single-sidebar-widget__title">Category</h4>
             <ul class="cat-list mt-20">
-                {% for side_category in global_categories.getAllCategories() %}
+                {% for side_category in global_categories.getAllCategories(true) %}
                     <li>
                         <a href="{{ path('category_articles',{id: side_category.id}) }}" class="d-flex justify-content-between">
                             <p>{{ side_category.name }}</p>
