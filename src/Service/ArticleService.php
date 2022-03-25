@@ -27,12 +27,14 @@ class ArticleService extends AbstractService
         $this->container    = $container;
     }
 
-    public function getArticlesPerPage($page_number, $articles_per_page): Pagerfanta
+    public function getArticlesCount(): int
     {
-        $article_query = $this->article_repo->getArticlesPerPageQuery();
-        $page = new Pagerfanta(new QueryAdapter($article_query));
-        $page->setMaxPerPage($articles_per_page);
-        return $page->setCurrentPage($page_number);
+        return $this->article_repo->getArticlesCount();
+    }
+    public function getArticlesPerPage($page_number, $articles_per_page): array
+    {
+        $start = ($page_number - 1) * $articles_per_page;
+        return $this->article_repo->getArticlesPerPage($articles_per_page, $start);
     }
 
     public function getLatestArticles($number_of_articles)

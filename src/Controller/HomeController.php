@@ -8,6 +8,7 @@ use App\Service\ArticleService;
 use App\Service\CategoryService;
 use App\Service\HomeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -32,22 +33,43 @@ class HomeController extends AbstractController
 
     /**
      * @Route(
-     *     "/posts/{page}",
-     *     name="posts",
-     *     requirements= {"page" ="\d+"}
+     *     "/posts",
+     *     name="posts"
      *     )
      */
-    public function index(int $page = 1): Response
+    public function index(): Response
     {
-        $articles = $this->article_service->getArticlesPerPage($page, 3);
         $latest_articles = $this->article_service->getLatestArticles(6);
 
         return $this->render('home/index.html.twig', [
-            'articles'          => $articles,
             'latest_articles'   => $latest_articles,
         ]);
     }
 
+    /**
+     * @Route (
+     *     "/get-posts/{page}",
+     *     name = "get-posts-per-page",
+     *     methods = "GET",
+     *     requirements= {"page" ="\d+"}
+     *     )
+     *
+     * @param int $page
+     * @return JsonResponse
+     */
+    public function get_posts(int $page = 1): JsonResponse
+    {
+        $articles = $this->article_service->getArticlesPerPage($page, 3);
+        $number_of_pages = ceil($this->article_service->getArticlesCount() / 3);
+
+        return new JsonResponse(
+            [
+                'data' => $articles,
+                'number_of_pages' => $number_of_pages
+            ],200
+        );
+
+    }
     /**
      * @Route(
      *     "/contact-us",

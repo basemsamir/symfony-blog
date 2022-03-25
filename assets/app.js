@@ -13,9 +13,11 @@ import './bootstrap';
 
 // start using vueJS
 import Vue from 'vue';
-import ArticleComponent from "./components/ArticleComponent";
+import ArticlePaginationComponent from "./components/ArticlePaginationComponent";
 
 new Vue({
     el: '#blog',
-    components: {ArticleComponent}
+    components: {
+        ArticlePaginationComponent
+    }
 })

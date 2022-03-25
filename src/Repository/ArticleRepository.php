@@ -32,14 +32,32 @@ class ArticleRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function getArticlesPerPageQuery(): QueryBuilder
+    public function getArticlesCount(): int
     {
-       return $this->createQueryBuilder('a')
-                   ->orderBy('a.created', 'DESC')
-                   ->leftJoin('a.comments','c')
-                   ->join('a.user','u')
-                   ->addSelect('a','c','u');
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select count(*) from article";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
 
+        return $result->fetchOne();
+    }
+    public function getArticlesPerPage($rows_count = 3, $start = 0): array
+    {
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select a.id, a.created, a.title, a.content, a.image_path, u.username, 
+                            (select count(*) from comment where article_id = a.id) as comments_count,
+                            (select GROUP_CONCAT(title) 
+                                from tag as t join tag_article as ta 
+                                on t.id = ta.tag_id
+                                where ta.article_id = a.id) as article_tags
+                            from article a join user u
+                            on a.user_id = u.id
+                            order by a.created desc 
+                            limit $rows_count offset $start
+                            ";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
+        return $result->fetchAllAssociative();
     }
 
     public function getCategoryArticlesPerPageQuery($category_id): QueryBuilder

@@ -23,9 +23,8 @@
     <body>
 
         {% include 'partials/header.html.twig' %}
-        {% block body %}{% endblock %}
         <div id="blog">
-            <article-component></article-component>
+            {% block body %}{% endblock %}
         </div>
         {% include 'partials/footer.html.twig' %}
 
@@ -33,7 +32,7 @@
         <script src="{{ asset('vendors/bootstrap/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('vendors/owl-carousel/owl.carousel.min.js') }}"></script>
         <script src="{{ asset('js/jquery.ajaxchimp.min.js') }}"></script>
-        <script src="{{ asset('js/mail-script.js') }}j"></script>
+        <script src="{{ asset('js/mail-script.js') }}"></script>
         <script src="{{ asset('js/main.js') }}"></script>
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
