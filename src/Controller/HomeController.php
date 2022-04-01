@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ContactUsFormType;
 use App\Form\NewletterSubscribtionFormType;
+use App\Message\NewsLetter;
 use App\Service\ArticleService;
 use App\Service\CategoryService;
 use App\Service\HomeService;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,8 +39,11 @@ class HomeController extends AbstractController
      *     name="posts"
      *     )
      */
-    public function index(): Response
+    public function index(MessageBusInterface $bus): Response
     {
+        // Test newsletter
+        $bus->dispatch(new NewsLetter('Hello Guys'));
+
         $latest_articles = $this->article_service->getLatestArticles(6);
 
         return $this->render('home/index.html.twig', [
