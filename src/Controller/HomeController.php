@@ -41,9 +41,6 @@ class HomeController extends AbstractController
      */
     public function index(MessageBusInterface $bus): Response
     {
-        // Test newsletter
-        $bus->dispatch(new NewsLetter('Hello Guys'));
-
         $latest_articles = $this->article_service->getLatestArticles(6);
 
         return $this->render('home/index.html.twig', [
