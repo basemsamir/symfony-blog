@@ -6,25 +6,28 @@ namespace App\Service;
 
 use App\Entity\Article;
 use App\Entity\Comment;
-use App\Form\NewletterSubscribtionFormType;
 use Carbon\Carbon;
 use Doctrine\Persistence\ManagerRegistry;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Route;
 
 class ArticleService extends AbstractService
 {
     private $article_repo;
     private $comment_repo;
     private $container;
+    private $router;
 
-    public function __construct(ManagerRegistry $doctrine, ContainerInterface $container)
+    public function __construct(ManagerRegistry $doctrine, ContainerInterface $container, UrlGeneratorInterface $router)
     {
         parent::__construct($doctrine);
         $this->article_repo = $this->doctrine->getRepository(Article::class);
         $this->comment_repo = $this->doctrine->getRepository(Comment::class);
         $this->container    = $container;
+        $this->router       = $router;
     }
 
     public function getArticlesCount(): int
@@ -39,7 +42,17 @@ class ArticleService extends AbstractService
 
     public function getLatestArticles($number_of_articles)
     {
-        return $this->article_repo->getOrderedNumberOfArticles($number_of_articles, 'DESC');
+        $package = new Package(new EmptyVersionStrategy());
+        $articles = $this->article_repo->getOrderedNumberOfArticles($number_of_articles, 'DESC');
+
+        array_walk($articles, function (&$item) use($package){
+           $item['image_path']   = $package->getUrl('/img/'.$item['image_path']);
+           $item['article_url']  = $this->router->generate('article',['id' => $item['id']]);
+           $item['category_url'] = $this->router->generate('category_articles',['id' => $item['category_id']]);
+           $item['created']      = date('Y-m-d',strtotime($item['created']));
+        });
+
+        return $articles;
     }
 
     public function getPreviousNextArticles(Article $current_article)

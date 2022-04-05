@@ -74,13 +74,16 @@ class ArticleRepository extends ServiceEntityRepository
 
     public function getOrderedNumberOfArticles($limit = '3', $order_by = 'ASC')
     {
-        return $this->createQueryBuilder('a')
-            ->join('a.category', 'c')
-            ->setMaxResults($limit)
-            ->orderBy('a.created',$order_by)
-            ->getQuery()
-            ->getResult()
-        ;
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select a.id, a.created, a.title, a.image_path, a.category_id, ca.name as category_name
+                            from article a join category ca
+                            on a.category_id = ca.id
+                            order by a.created $order_by
+                            limit $limit 
+                            ";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
+        return $result->fetchAllAssociative();
     }
 
     public function getMostViewedArticles($limit = '3')

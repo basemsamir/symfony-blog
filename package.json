@@ -20,5 +20,9 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "vue-owl-carousel": "^2.0.3",
+        "vue-timeago": "^5.1.3"
     }
 }

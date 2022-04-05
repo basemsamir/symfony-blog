@@ -13,11 +13,17 @@ import './bootstrap';
 
 // start using vueJS
 import Vue from 'vue';
-import ArticlePaginationComponent from "./components/ArticlePaginationComponent";
+import HomeComponent from "./components/HomeComponent";
+
+// Vue filters
+import VueTimeago from 'vue-timeago';
+
+Vue.use(VueTimeago, {
+    name: 'Timeago', // Component name, `Timeago` by default
+    locale: 'en', // Default locale
+})
 
 new Vue({
     el: '#blog',
-    components: {
-        ArticlePaginationComponent
-    }
+    components: {HomeComponent: HomeComponent}
 })

@@ -8,6 +8,7 @@ use App\Message\NewsLetter;
 use App\Service\ArticleService;
 use App\Service\CategoryService;
 use App\Service\HomeService;
+use PHPUnit\Util\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +72,25 @@ class HomeController extends AbstractController
             ],200
         );
 
+    }
+
+    /**
+     * @Route (
+     *     "/get-latest-posts/",
+     *     name = "get-latest-posts",
+     *     methods = "GET"
+     *     )
+     * @return JsonResponse
+     */
+    public function get_latest_posts(): JsonResponse
+    {
+        $latest_articles = $this->article_service->getLatestArticles(6);
+
+        return new JsonResponse(
+            [
+                'data' => $latest_articles,
+            ],200
+        );
     }
     /**
      * @Route(
