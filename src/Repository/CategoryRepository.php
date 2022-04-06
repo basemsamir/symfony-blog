@@ -19,6 +19,18 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    public function getArticlesCountPerCategory(): array
+    {
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select ca.id, ca.name, count(a.id) as articles_count
+                            from article a join category ca
+                            on a.category_id = ca.id
+                            group by ca.id
+                            ";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
+        return $result->fetchAllAssociative();
+    }
 
     /*
     public function findOneBySomeField($value): ?Category

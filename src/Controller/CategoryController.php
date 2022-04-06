@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Service\CategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -34,6 +35,22 @@ class CategoryController extends AbstractController
 
         return $this->render('category/index.html.twig',
             compact('category_name','articles')
+        );
+    }
+
+    /**
+     * @Route (
+     *     "/get-articles-count/",
+     *     name="get-categories-with-articles-count"
+     *     )
+     * @return JsonResponse
+     */
+    public function getCategoriesWithArticlesCount(): JsonResponse
+    {
+        return new JsonResponse(
+            [
+                'data' => $this->category_service->getAllCategories()
+            ]
         );
     }
 }
