@@ -88,12 +88,17 @@ class ArticleRepository extends ServiceEntityRepository
 
     public function getMostViewedArticles($limit = '3')
     {
-        return $this->createQueryBuilder('a')
-            ->where('a.views is not null')
-            ->setMaxResults($limit)
-            ->orderBy('a.views','DESC')
-            ->getQuery()
-            ->getResult();
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select a.id, a.created, a.title, a.image_path, u.username
+                            from article a join user u
+                            on a.user_id = u.id
+                            where a.views is not null
+                            order by a.views desc
+                            limit $limit 
+                            ";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
+        return $result->fetchAllAssociative();
     }
 
     public function getPrevNextArticle(int $current_article_id): array

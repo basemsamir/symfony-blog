@@ -7,6 +7,7 @@ use App\Form\CommentFormType;
 use App\Repository\ArticleRepository;
 use App\Service\ArticleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,6 +44,25 @@ class ArticleController extends AbstractController
             compact('article',
                   'pre_next_articles',
                               'comment_form'));
+    }
+
+    /**
+     * @Route (
+     *     "/get-popular-articles",
+     *     name = "get-popular-articles"
+     *     )
+     *
+     * @return JsonResponse
+     */
+    public function listPopularArticles(): JsonResponse
+    {
+        $popular_articles   =   $this->article_service->getPopularArticles(3);
+
+        return new JsonResponse(
+            [
+                'data'  =>  $popular_articles
+            ]
+        );
     }
 
 }

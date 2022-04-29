@@ -36,7 +36,7 @@ class HomeController extends AbstractController
 
     /**
      * @Route(
-     *     "/posts",
+     *     "/",
      *     name="posts"
      *     )
      */
@@ -92,6 +92,25 @@ class HomeController extends AbstractController
             ],200
         );
     }
+
+    /**
+     * @Route (
+     *     "/get-subscription-form",
+     *     name = "get-subscription-form"
+     *     )
+     */
+    public function get_subscription_form()
+    {
+        $form = $this->createForm(NewletterSubscribtionFormType::class);
+        $view = $this->renderView('home/subscribtion-form-sidebar.html.twig',
+        [
+            'form'  =>  $form->createView()
+        ]);
+
+        return $this->json([
+            'form'  => $view
+        ]);
+    }
     /**
      * @Route(
      *     "/contact-us",
@@ -136,19 +155,17 @@ class HomeController extends AbstractController
      */
     public function storeSubscription(Request $request)
     {
-        $newsletter_form = $this->home_service->getNewsletterForm();
+        $newsletter_form = $this->createForm(NewletterSubscribtionFormType::class);
         $newsletter_form->handleRequest($request);
         if($newsletter_form->isSubmitted() && $newsletter_form->isValid()){
             $newsletter_data = $newsletter_form->getData();
             $this->home_service->storeNewsletterSubscription($newsletter_data);
 
-            $this->addFlash(
-                'success',
-                'You subscribed to us!'
-            );
-            return $this->redirect($request->headers->get('referer'));
-
+            return $this->json([
+                'message' => "You subscribed to us!"
+            ], 200);
         }
-        dd($request->request->all());
+
+        return $this->json([], 400);
     }
 }

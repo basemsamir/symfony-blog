@@ -38,6 +38,7 @@ class HomeService extends AbstractService
     public function getNewsletterFormView()
     {
         $newsletter_form = $this->getNewsletterForm();
+
         return $newsletter_form->createView();
     }
 

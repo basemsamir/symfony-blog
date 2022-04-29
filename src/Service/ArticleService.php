@@ -67,7 +67,14 @@ class ArticleService extends AbstractService
 
     public function getPopularArticles($number_of_articles)
     {
-        return $this->article_repo->getMostViewedArticles($number_of_articles);
+        $popular_articles = $this->article_repo->getMostViewedArticles($number_of_articles);
+
+        array_walk($popular_articles, function (&$item){
+           $item['article_url'] =   $this->router->generate('article',['id' => $item['id']]);
+           $item['created']     =   date('d M',strtotime($item['created']));
+        });
+
+        return $popular_articles;
     }
 
     public function postArticleComment($comment_data)
