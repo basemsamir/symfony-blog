@@ -13,15 +13,24 @@ import './bootstrap';
 
 // start using vueJS
 import Vue from 'vue';
-import HomeComponent from "./components/HomeComponent";
-
+import VueRouter from 'vue-router';
 import VueTimeago from 'vue-timeago';
+import Routes from "./router/index";
+import AppComponent from "./components/AppComponent";
+
+
+Vue.use(VueRouter);
 Vue.use(VueTimeago, {
     name: 'Timeago', // Component name, `Timeago` by default
     locale: 'en', // Default locale
 })
 
+const routes = new VueRouter(
+    {routes: Routes}
+)
+
 new Vue({
     el: '#blog',
-    components: {HomeComponent: HomeComponent}
+    components: {AppComponent: AppComponent},
+    router: routes
 })
