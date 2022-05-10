@@ -39,6 +39,28 @@ class CategoryController extends AbstractController
     }
 
     /**
+     * @Route(
+     *     "/get-category/{id}/{page}",
+     *     name="getCategory",
+     *     requirements= {
+     *     "id"     =  "\d+",
+     *     "page"   =  "\d+",
+     *     }
+     * )
+     */
+    public function getCategory(int $id, int $page = 1): JsonResponse
+    {
+        $category        = $this->category_service->getCategory($id);
+        $category_name   = $category->getName();
+        $articles        = $this->category_service->getCategoryArticlesPerPage($id, $page, 6);
+        $number_of_pages = ceil($this->category_service->getCategoryArticlesCount($id) / 6);
+
+        return $this->json(
+            compact('category_name','articles','number_of_pages')
+        );
+    }
+
+    /**
      * @Route (
      *     "/get-articles-count/",
      *     name="get-categories-with-articles-count"

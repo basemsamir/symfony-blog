@@ -32,6 +32,15 @@ class CategoryRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
+    public function getArticlesCount(int $id): int
+    {
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select count(*) from article where category_id = $id";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
+
+        return $result->fetchOne();
+    }
     /*
     public function findOneBySomeField($value): ?Category
     {

@@ -37,8 +37,8 @@ export default {
     }
   },
   methods:{
-    getPostsPerPage: function (page){
-      axios.get('/get-posts/'+page).then(response=>{
+    getPostsPerPage: function (){
+      axios.get('/get-posts/'+this.currentPage).then(response=>{
         if(response.data){
           this.articles = response.data['data'];
           this.numberOfPages = response.data['number_of_pages']
@@ -50,16 +50,16 @@ export default {
     nextPage: function (){
       if(this.numberOfPages > this.currentPage){
         this.currentPage++;
-        this.getPostsPerPage(this.currentPage);
+        this.getPostsPerPage();
       }
     },
     previousPage: function (){
       this.currentPage--;
-      this.getPostsPerPage(this.currentPage);
+      this.getPostsPerPage();
     }
   },
   mounted() {
-    this.getPostsPerPage(this.currentPage);
+    this.getPostsPerPage();
   }
 }
 </script>

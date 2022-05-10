@@ -34,6 +34,7 @@ class ArticleService extends AbstractService
     {
         return $this->article_repo->getArticlesCount();
     }
+
     public function getArticlesPerPage($page_number, $articles_per_page): array
     {
         $start = ($page_number - 1) * $articles_per_page;
@@ -48,7 +49,7 @@ class ArticleService extends AbstractService
         array_walk($articles, function (&$item) use($package){
            $item['image_path']   = $package->getUrl('/img/'.$item['image_path']);
            $item['article_url']  = $this->router->generate('article',['id' => $item['id']]);
-           $item['category_url'] = $this->router->generate('category_articles',['id' => $item['category_id']]);
+        //   $item['category_url'] = $this->router->generate('category_articles',['id' => $item['category_id']]);
            $item['created']      = date('Y-m-d',strtotime($item['created']));
         });
 

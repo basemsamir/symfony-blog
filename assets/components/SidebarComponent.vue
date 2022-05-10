@@ -14,10 +14,9 @@
         <ul class="cat-list mt-20">
 
           <li v-for="category in categories">
-            <a :href="category.category_url" class="d-flex justify-content-between">
+            <router-link :to="'/category/'+category.id" class="d-flex justify-content-between">
               <p>{{ category.name }}</p>
-              <p>{{ category.articles_count }}</p>
-            </a>
+              <p>{{ category.articles_count }}</p></router-link>
           </li>
 
         </ul>

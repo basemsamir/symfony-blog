@@ -41,6 +41,7 @@ class ArticleRepository extends ServiceEntityRepository
 
         return $result->fetchOne();
     }
+
     public function getArticlesPerPage($rows_count = 3, $start = 0): array
     {
         $sql_connection = $this->getEntityManager()->getConnection();
@@ -60,16 +61,20 @@ class ArticleRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
-    public function getCategoryArticlesPerPageQuery($category_id): QueryBuilder
+    public function getCategoryArticlesPerPageQuery($category_id, $rows_count = 6, $start = 0): array
     {
-        return $this->createQueryBuilder('a')
-            ->orderBy('a.created', 'DESC')
-            ->leftJoin('a.comments','c')
-            ->join('a.user','u')
-            ->where('a.category = :id')
-            ->setParameter('id',$category_id)
-            ->addSelect('a','c','u');
-
+        $sql_connection = $this->getEntityManager()->getConnection();
+        $sql            = "select a.id, a.created, a.title, a.content, a.image_path, u.username, 
+                            (select count(*) from comment where article_id = a.id) as comments_count
+                            from article a join user u
+                            on a.user_id = u.id
+                            join category ca on a.category_id = ca.id and ca.id = $category_id
+                            order by a.created desc 
+                            limit $rows_count offset $start
+                            ";
+        $statement      = $sql_connection->prepare($sql);
+        $result         = $statement->executeQuery();
+        return $result->fetchAllAssociative();
     }
 
     public function getOrderedNumberOfArticles($limit = '3', $order_by = 'ASC')
