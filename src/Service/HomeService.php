@@ -17,6 +17,7 @@ class HomeService extends AbstractService
     private $newsletter_repo;
     private $setting_repo;
     private $container;
+    private $form_factory;
 
     public function __construct(ManagerRegistry $doctrine, ContainerInterface $container)
     {
@@ -24,13 +25,14 @@ class HomeService extends AbstractService
         $this->newsletter_repo = $this->doctrine->getRepository(NewsLetter::class);
         $this->setting_repo    = $this->doctrine->getRepository(Setting::class);
         $this->container       = $container;
+        $this->form_factory    = $this->container->get('form.factory');
     }
 
     public function getNewsletterForm()
     {
-        return $this->container
-            ->get('form.factory')
-            ->create(NewletterSubscribtionFormType::class,[],[
+        return $this->form_factory->create(
+            NewletterSubscribtionFormType::class,
+            [], [
                 'action'    =>  $this->container->get('router')->generate('store_subscription')
             ]);
     }
