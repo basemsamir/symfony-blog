@@ -7,8 +7,9 @@ namespace App\Service;
 use App\Entity\Article;
 use App\Entity\Comment;
 use Carbon\Carbon;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -18,16 +19,17 @@ class ArticleService extends AbstractService
 {
     private $article_repo;
     private $comment_repo;
-    private $container;
+    private $entity_manager;
     private $router;
 
-    public function __construct(ManagerRegistry $doctrine, ContainerInterface $container, UrlGeneratorInterface $router)
+    public function __construct(ManagerRegistry $doctrine, EntityManagerInterface $entity_manager, UrlGeneratorInterface $router)
     {
         parent::__construct($doctrine);
-        $this->article_repo = $this->doctrine->getRepository(Article::class);
-        $this->comment_repo = $this->doctrine->getRepository(Comment::class);
-        $this->container    = $container;
-        $this->router       = $router;
+
+        $this->article_repo     = $this->doctrine->getRepository(Article::class);
+        $this->comment_repo     = $this->doctrine->getRepository(Comment::class);
+        $this->entity_manager   = $entity_manager;
+        $this->router           = $router;
     }
 
     public function getArticlesCount(): int
@@ -63,7 +65,10 @@ class ArticleService extends AbstractService
 
     public function increaseViews(Article $article)
     {
-        $this->article_repo->increaseViews($article);
+        $article->setViews($article->getViews()+1);
+
+        $this->entity_manager->persist($article);
+        $this->entity_manager->flush();
     }
 
     public function getPopularArticles($number_of_articles)

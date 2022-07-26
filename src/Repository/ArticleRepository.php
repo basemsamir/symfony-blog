@@ -21,17 +21,6 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    /**
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function increaseViews(Article $article)
-    {
-        $article->setViews($article->getViews()+1);
-        $this->getEntityManager()->persist($article);
-        $this->getEntityManager()->flush();
-    }
-
     public function getArticlesCount(): int
     {
         $sql_connection = $this->getEntityManager()->getConnection();
