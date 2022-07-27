@@ -50,8 +50,14 @@ class CategoryController extends AbstractController
      */
     public function getCategory(int $id, int $page = 1): JsonResponse
     {
-        $category        = $this->category_service->getCategory($id);
-        $category_name   = $category->getName();
+        if($category = $this->category_service->getCategory($id)){
+            $category_name   = $category->getName();
+        }else{
+            return $this->json([
+                'message' => 'Category is not found!'
+            ],404);
+        }
+
         $articles        = $this->category_service->getCategoryArticlesPerPage($id, $page, 6);
         $number_of_pages = ceil($this->category_service->getCategoryArticlesCount($id) / 6);
 
