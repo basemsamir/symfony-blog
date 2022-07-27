@@ -7,7 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class HomeControllerTest extends WebTestCase
 {
     private $client;
-    public const POSTS_URL = '/get-posts';
+    private const POSTS_URL = '/get-posts';
+    private const LATEST_POSTS_URL = '/get-latest-posts/';
 
     protected function setUp(): void
     {
@@ -81,4 +82,41 @@ class HomeControllerTest extends WebTestCase
 
         $this->assertCount(0, $decoded_response);
     }
+
+    public function testGetLatestPostsAPIIsReachable(): void
+    {
+        $this->client->xmlHttpRequest('GET', self::LATEST_POSTS_URL);
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testGetLatestPostsAPIAsJsonResponse(): void
+    {
+        $this->client->xmlHttpRequest('GET', self::LATEST_POSTS_URL);
+
+        $response = $this->client->getResponse()->getContent();
+
+        $this->assertJson($response);
+    }
+
+    public function testGetLatestPostsAPIHasDataKey(): void
+    {
+        $this->client->xmlHttpRequest('GET', self::LATEST_POSTS_URL);
+
+        $response = $this->client->getResponse()->getContent();
+        $decoded_response = json_decode($response, true);
+
+        $this->assertArrayHasKey('data',$decoded_response);
+    }
+
+    public function testGetLatestPostsAPIReturnsLessOrEqualSixPosts(): void
+    {
+        $this->client->xmlHttpRequest('GET', self::POSTS_URL."/1");
+
+        $response         = $this->client->getResponse()->getContent();
+        $decoded_response = json_decode($response, true)['data'];
+
+        $this->assertLessThanOrEqual(6, count($decoded_response));
+    }
+
 }
